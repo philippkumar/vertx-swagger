@@ -35,6 +35,7 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
     public static final String RX_INTERFACE_OPTION = "rxInterface";
     public static final String MAIN_API_VERTICAL_GENERATION_OPTION = "mainVerticleGeneration";
     public static final String API_IMPL_GENERATION_OPTION = "apiImplGeneration";
+    public static final String INJECT_OPTION = "useDependencyInjection";
 
     public JavaVertXServerGenerator() {
         super();
@@ -110,6 +111,13 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
 
         cliOptions.add(CliOption.newBoolean(API_IMPL_GENERATION_OPTION,
             "When specified, xxxApiImpl.java will be generated"));
+
+        cliOptions.add(CliOption.newBoolean(INJECT_OPTION,
+                "When specified, generated verticles will not instantiate the API service implementations"
+                        + " directly, but instead use the javax.inject.Inject Annotation, e.g." +
+                        " @Inject PetApi service. You can use that inside a dependency injection" +
+                        " container (like Spring or CDI) to provide your own implementations at runtime."
+        ));
     }
 
     /**
@@ -147,6 +155,11 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
     @Override
     public void processOpts() {
         super.processOpts();
+
+        if (additionalProperties.containsKey(INJECT_OPTION)) {
+            apiTemplateFiles.remove("apiVerticle.mustache");
+            apiTemplateFiles.put("apiInjectVerticle.mustache", "Verticle.java");
+        }
 
         apiTestTemplateFiles.clear();
 
