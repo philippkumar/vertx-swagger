@@ -4,9 +4,9 @@ package {{package}};
 {{/imports}}
 
 {{#rxInterface}}
-import rx.Completable;
-import rx.Single;
-import io.vertx.rxjava.ext.auth.User;
+import io.reactivex.Completable;
+import io.reactivex.Single;
+import io.vertx.reactivex.ext.auth.User;
 {{/rxInterface}}
 {{^rxInterface}}
 import io.vertx.core.AsyncResult;
